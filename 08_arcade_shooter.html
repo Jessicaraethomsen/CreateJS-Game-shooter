@@ -1,0 +1,90 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title></title>
+<script type="text/javascript" src="https://code.createjs.com/1.0.0/createjs.min.js"></script>
+<script type="text/javascript">
+	
+	// NOTE for Dreamweaver: Does NOT work in "Real time preview", choose temporary file instead!
+	
+var gun, target, w, h; // global variables
+	
+function init(){
+	stage = new createjs.Stage("demoCanvas");
+	h= demoCanvas.height;// canvas height	
+	w= demoCanvas.width; // canvas width
+	
+	//Testing
+	console.log(h);
+	console.log(w);
+	
+	//my gun functions
+	drawGun();
+	
+	//my target functions
+	drawTarget();
+	moveTarget();
+	
+	createjs.Ticker.on("tick", tick); // the main listener
+}
+
+function tick(event) {
+	//if any keyboard key is press an eventhandler for windeow if any key is pressed.
+	
+	stage.update(event);
+}
+	 
+function drawGun(){
+		rect = new createjs.Shape();
+	    rect.graphics.beginFill("#6951fd").drawRect(0, 0, 15, 30);
+		rect.x = w /2 -15;
+		rect.y = h - 30;
+		stage.addChild(rect);  
+		console.log('Shape create: rect');		
+}	
+	
+function drawTarget(){
+		target = new createjs.Shape();
+	    target.graphics.beginFill("#23e4f8").drawRect(0, 0, 35, 10);
+		target.x = w - w + 10;   
+		target.y = h - h + 30;   
+		stage.addChild(target);  
+		console.log('Shape create: target');	
+}
+	
+function moveTarget(){
+ 	createjs.Tween.get(target,{loop:true}) //make a loop...
+	.to({x: w - 40 , y: h - h + 30 }, 6000)  //you need to make this scalable
+	.wait(200)
+	.to({x: target.x, y: h - h + 30 }, 6000)
+	 //you need to make this scalable
+	
+	
+	}
+	
+	
+	
+	
+	
+function operateGun(event){
+	
+}
+
+	
+	
+	
+</script>
+<style type="text/css">
+#demoCanvas {
+	background: #2b1442;
+	border: 1px solid #fff;
+	padding: 2px;
+}
+</style>
+</head>
+
+<body onload="init();">
+<canvas id="demoCanvas" width="500" height="300"> alternate content </canvas>
+</body>
+</html>
