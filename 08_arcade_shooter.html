@@ -26,6 +26,9 @@ function init(){
 	drawTarget();
 	moveTarget();
 	
+	//score function
+	addScore();
+	
 	createjs.Ticker.on("tick", tick); // the main listener
 }
 
@@ -65,13 +68,19 @@ function moveTarget(){
 	
 	
 	
-	
-	
 function operateGun(event){
 	
 }
 
 	
+function addScore(){
+		score = new createjs.Text ("0", "20px Arial", "#fff"); //here we create a display with a 0
+		score.x = w - 20;  //this is flexible... it will always be 50 pixels from the top
+		score.y = h - h + 20;
+		score.textBaseline = "alphabetic";
+		score.value = 0;  //setting the value at 0.... so we start there
+		stage.addChild(score); //then we are addign it to the stage
+	}
 	
 	
 </script>
@@ -85,6 +94,7 @@ function operateGun(event){
 </head>
 
 <body onload="init();">
-<canvas id="demoCanvas" width="500" height="300"> alternate content </canvas>
+	<h2>Space Shooters Adventures</h2>
+<canvas id="demoCanvas" width="700" height="300"> alternate content </canvas>
 </body>
 </html>
