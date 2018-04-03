@@ -1,0 +1,76 @@
+@charset "UTF-8";
+/* CSS Document */
+
+body{
+	background:#330051;
+}
+
+#demoCanvas {
+	background: #330051;
+	border: 1px solid #fff;
+	padding: 2px;
+	margin: 0 auto;
+    width: 100%;
+}
+
+h1{
+	font-family: 'Chau Philomene One', sans-serif;
+	color: #FF56DE;
+}
+
+
+h2{
+	font-family: 'Chau Philomene One', sans-serif;
+	color: #fff;
+}
+
+.m-top20{
+	margin-top: 20px;	
+}
+.m-bot20{
+	margin-bottom: 20px;	
+}
+.container {
+	display: block;
+	position: absolute;
+}
+
+.btn {
+  -webkit-border-radius: 60;
+  -moz-border-radius: 60;
+  border-radius: 50px;
+  margin-top: 10px;
+	font-family: 'Chau Philomene One', sans-serif;
+  color: #ffffff;
+  font-size: 20px;
+  background: #FF56DE;
+  padding: 9px 40px 10px 40px;
+  text-decoration: none;
+}
+
+.btn:hover {
+  background:#B02FFD;
+  color: #ffffff;
+  text-decoration: none;
+}
+
+
+.m-top{
+	margin-top: 30px;
+}
+
+.modal {
+	background-color: rgba(150, 29, 255, 0.8);
+	display: none;
+	margin: 0 auto;
+	margin-top: 15%;
+    width: 50%;
+	text-align: center;
+	height: 200px;
+}
+
+.modal.is-visible {
+	display: block;
+	border-radius: 10px;
+
+}

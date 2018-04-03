@@ -2,17 +2,18 @@
 <html>
 <head>
 <meta charset="utf-8">
-<title></title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Shooting Game</title>
+<link href="https://fonts.googleapis.com/css?family=Chau+Philomene+One" rel="stylesheet">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<link rel="stylesheet" href="styles.css">
 <script type="text/javascript" src="https://code.createjs.com/1.0.0/createjs.min.js"></script>
 <script type="text/javascript">
 	
-	// NOTE for Dreamweaver: Does NOT work in "Real time preview", choose temporary file instead!
+// NOTE for Dreamweaver: Does NOT work in "Real time preview", choose temporary file instead!
 	
-var gun, target, w, h; // global variables
-	
-var BULLET_SPEED = 15;  
-var bullets;  
-var bulletG;	
+var gun, target, w, h, bullet;
+// global variables
 	
 function init(){
 	stage = new createjs.Stage("demoCanvas");
@@ -33,42 +34,45 @@ function init(){
 	//score function
 	addScore();
 	//if any keyboard key is press an eventhandler for window if any key is pressed.
+	
 	window.onkeydown = onKey;
-	
-	
 	createjs.Ticker.on("tick", tick); // the main listener
 }
 
+	
+	
 function tick(event) {
 
+//		target.alpha = 1;
+//		var pt = bullet.localToLocal(0, 0, target);
+//		console.log(pt.x, pt.y);
+//		if(target.hitTest(pt.x, pt.y)){target.alpha = 0.1;};
+		
+	stage.update(); 
+		
+	}
 	
-	var pt = rect.globalToLocal(stage.mouseX, stage.mouseY);
-	//testing:
-	//console.log(pt.x, pt.y);
-	
-	stage.update(event);
-}
-	 
 
 	
-//**************THE TARGET************//		
+//**************THE TARGET************//
+	
 function drawTarget(){
 		target = new createjs.Shape();
-	    target.graphics.beginFill("#23e4f8").drawRect(0, 0, 35, 10);
+	    target.graphics.beginFill("#FF56DE").drawRect(0, 0, 35, 10);
 		target.x = w - w + 10;   
-		target.y = h - h + 30;   
+		target.y = h - h + 30;
+		target.alpha = 1;
 		stage.addChild(target);  
 		console.log('Shape create: target');	
 }
 	
 function moveTarget(){
  	createjs.Tween.get(target,{loop:true}) //make a loop...
-	.to({x: w - 40 , y: h - h + 30 }, 6000)  //you need to make this scalable
-	.wait(200)
-	.to({x: target.x, y: h - h + 30 }, 6000)
+	.to({x: w - 40 , y: h - h + 30 }, 4000)  //you need to make this scalable
+	.wait(10)
+	.to({x: target.x, y: h - h + 30 }, 4000)
 	 //you need to make this scalable
-	
-	
+
 	}
 		
 //**************THE GUN**********//	
@@ -76,7 +80,7 @@ function moveTarget(){
 	
 function drawGun(){
 		rect = new createjs.Shape();
-	    rect.graphics.beginFill("#6951fd").drawRect(0, 0, 15, 30);
+	    rect.graphics.beginFill("#fff").drawRect(0, 0, 15, 30);
 		rect.x = w /2 -15;
 		rect.y = h - 30;
 		stage.addChild(rect);  
@@ -85,19 +89,21 @@ function drawGun(){
 		
 	
 function operateGun(event){
-	
-	
+
 	bullet = new createjs.Shape();
 	bullet.graphics.beginFill("#fff").drawCircle(0, 0, 5);  
     bullet.x = rect.x;  
     bullet.y = rect.y - 30;  
 	
-	
-	createjs.Tween.get(bullet) //make a loop...
+	createjs.Tween.get(bullet) 
 	.to({ y: h - h - 40 }, 800)  //you need to make this scalable
+	
+	createjs.Sound.on("fileload", laserSound); ///call function hanle clall sound
+	createjs.Sound.registerSound('laser.mp3','laser')
 	
     stage.addChild(bullet); 
 }
+	
 
 	
 function onKey(e){
@@ -114,39 +120,82 @@ function onKey(e){
 				rect.x += 10;
 				break;
 				
-				 // Space bar for firing  
 				case 32:    
-				operateGun();  
+				operateGun();
+				laserSound()
+				score.value++; 
+				score.text = score.value;
+				checkGame();
+				
         		break; 
 			
 		}
 		
 	}
+
+	
+//**************ADD SOUND**********//	
+	
+function laserSound(){
+		
+		sound = createjs.Sound.play('laser');
+	}
+
+function winnerSound(){
+		
+		sound = createjs.Sound.play('winner');
+	}
+		
 	
 //**************ADD SCORE**********//	
 	
 function addScore(){
 		score = new createjs.Text ("0", "20px Arial", "#fff"); //here we create a display with a 0
-		score.x = w - 20;  //this is flexible... it will always be 50 pixels from the top
+		score.x = w - 25;  //this is flexible... it will always be 50 pixels from the top
 		score.y = h - h + 20;
 		score.textBaseline = "alphabetic";
 		score.value = 0;  //setting the value at 0.... so we start there
 		stage.addChild(score); //then we are addign it to the stage
-	}
+		
 	
+	}
+
+	
+//**************RESET & GAME OVER***********//
+	function checkGame () {
+	if ( score.value === 5 ) {
+		createjs.Sound.on("fileload", winnerSound); 
+		createjs.Sound.registerSound('winner.mp3','winner')
+		winnerSound();
+		var modal = document.getElementById('restart-dialog'),
+	   	restartButton = document.getElementById('restart');
+		modal.className = modal.className + ' is-visible';
+		restartButton.onclick = function (e) {
+		e.preventDefault();
+ 		modal.className = 'modal';
+        score.value = 0; 
+	    init();
+		};
+	}
+}
 	
 </script>
-<style type="text/css">
-#demoCanvas {
-	background: #2b1442;
-	border: 1px solid #fff;
-	padding: 2px;
-}
-</style>
+<link href="styles.css" rel="stylesheet" type="text/css">
 </head>
 
 <body onload="init();">
-	<h2>Space Shooters Adventures</h2>
-<canvas id="demoCanvas" width="700" height="300"> alternate content </canvas>
+<div class="container-fluid">
+  <div class="col-12 m-bot20" m-top20>
+    <h1 class="text-center">Space Shooters Adventures</h1>
+  </div>
+</div>
+<div class="container-fluid col-12">
+  <canvas id="demoCanvas" width="900" height="400"> alternate content </canvas>
+  <div id="restart-dialog" class="modal col-4">
+    <h2>Your a WINNER baby!</h2>
+    <h2>Ready for a new game!</h2>
+    <button id="restart" class="btn" name="button">PLAY AGAIN</button>
+  </div>
+</div>
 </body>
 </html>
