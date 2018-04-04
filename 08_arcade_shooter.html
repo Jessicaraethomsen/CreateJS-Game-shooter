@@ -43,11 +43,14 @@ function init(){
 	
 function tick(event) {
 
-//		target.alpha = 1;
-//		var pt = bullet.localToLocal(0, 0, target);
-//		console.log(pt.x, pt.y);
-//		if(target.hitTest(pt.x, pt.y)){target.alpha = 0.1;};
-		
+	/*target.alpha = 1;
+	var pt = bullet.localToLocal(0, 0, target);
+	console.log(pt.x, pt.y);
+	if(target.hitTest(pt.x, pt.y)){
+	target.alpha = 0.1
+	score.value++; 
+	score.text = score.value;
+	checkGame();};*/
 	stage.update(); 
 		
 	}
@@ -57,6 +60,17 @@ function tick(event) {
 //**************THE TARGET************//
 	
 function drawTarget(){
+		target = new createjs.Bitmap('jelly.svg'); 
+		target.x = w - w + 10;   
+		target.y = h - h + 30;
+		stage.addChild(target); //here we show the butterfly on the stage
+		target.scaleX = 0.2; // it will be 1/3 the size You can look it up in the API
+		target.scaleY = 0.2;
+		
+	}
+	
+	
+/*function drawTarget(){
 		target = new createjs.Shape();
 	    target.graphics.beginFill("#FF56DE").drawRect(0, 0, 35, 10);
 		target.x = w - w + 10;   
@@ -64,7 +78,7 @@ function drawTarget(){
 		target.alpha = 1;
 		stage.addChild(target);  
 		console.log('Shape create: target');	
-}
+}*/
 	
 function moveTarget(){
  	createjs.Tween.get(target,{loop:true}) //make a loop...
@@ -105,12 +119,11 @@ function operateGun(event){
 }
 	
 
-	
+	//**************THE KEY MOVEMENT**********//	
 function onKey(e){
 		switch(e.keyCode){
 				
-				//We might need to make a if condition later
-				case 37:  //keycode are set 37: left arrow, 39 is right
+				case 37:  
 				console.log('move-left');
 				rect.x -= 10;
 				break;
@@ -127,12 +140,10 @@ function onKey(e){
 				score.text = score.value;
 				checkGame();
 				
-        		break; 
-			
+        		break; 	
 		}
 		
 	}
-
 	
 //**************ADD SOUND**********//	
 	
@@ -146,7 +157,6 @@ function winnerSound(){
 		sound = createjs.Sound.play('winner');
 	}
 		
-	
 //**************ADD SCORE**********//	
 	
 function addScore(){
@@ -157,7 +167,6 @@ function addScore(){
 		score.value = 0;  //setting the value at 0.... so we start there
 		stage.addChild(score); //then we are addign it to the stage
 		
-	
 	}
 
 	
@@ -179,6 +188,8 @@ function addScore(){
 	}
 }
 	
+	
+	
 </script>
 <link href="styles.css" rel="stylesheet" type="text/css">
 </head>
@@ -186,7 +197,7 @@ function addScore(){
 <body onload="init();">
 <div class="container-fluid">
   <div class="col-12 m-bot20" m-top20>
-    <h1 class="text-center">Space Shooters Adventures</h1>
+    <h1 class="text-center">Space JellyFish</h1>
   </div>
 </div>
 <div class="container-fluid col-12">
