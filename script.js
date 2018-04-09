@@ -1,11 +1,11 @@
-
-var rect, target, w, h;
-var bullet;
+var rect, bullet, score, gunCoord, target, w, h; // global variables
+var fired = false;
 var bulletcoordX,bulletcoordY;
-var targetcoordX,targettcoordY;
+
 
 	
 function init(){
+	"use strict";
 	stage = new createjs.Stage("demoCanvas");
 	h= demoCanvas.height;// canvas height	
 	w= demoCanvas.width; // canvas width
@@ -31,23 +31,18 @@ function init(){
 
 }
 	
-
-		function tick(event) {
-	//bulletcoord = bullet.localtoGlobal(w /2 -15);
-	   
-		stage.update(); 
-						
-
-	
-			
-		}
+	function tick(event) {
+			"use strict";
+	gunCoord = rect.localToGlobal(w / 2, h - 15); //ALWAYS TRACING THE X POSITION OF THE GUN
+	//win();
+	stage.update(event);
+}
 
 function drawTarget(){
+	"use strict";
 		target = new createjs.Shape();
 	    target.graphics.beginFill("#FF56DE").drawRect(0, 0, 35, 10);
-		target.x = 0;   
-		target.y = 0;
-		
+
 		target.alpha = 1;
 		targetcoordX = target.x;
 		targetcoordY = target.y;
@@ -59,9 +54,10 @@ function drawTarget(){
 }
 	
 function moveTarget(){
+	"use strict";
  	createjs.Tween.get(target,{loop:true}) //make a loop...
-	.to({x: w- 30 , y: 0 }, 4000)  //you need to make this scalable
-	.to({x: 0, y: 0}, 4000)
+	.to({x: w- 30 }, 4000)  //you need to make this scalable
+	.to({x: 0}, 4000);
 	 
 	}
 		
@@ -69,6 +65,7 @@ function moveTarget(){
 	
 	
 function drawGun(){
+	"use strict";
 		rect = new createjs.Shape();
 	    rect.graphics.beginFill("#fff").drawRect(0, 0, 15, 30);
 		rect.x = w /2 -15;
@@ -79,8 +76,9 @@ function drawGun(){
 		
 	
 function operateGun(event){
-
+	"use strict";
 	bullet = new createjs.Shape();
+	fired = true;
 	bullet.graphics.beginFill("#fff").drawCircle(0, 0, 5);  
    
 	bullet.x = rect.x + 7;  
@@ -88,16 +86,17 @@ function operateGun(event){
 	
 	bulletcoordX = bullet.x;
 	bulletcoordY = bullet.y;
+	bulletcoordX=gunCoord.x; //THE X VALUE OF THE BULLET
 
 	createjs.Tween.get(bullet,{loop:false}).to({ y: -300 }, 1000);
 	 
-	
 	createjs.Sound.on("fileload", laserSound); ///call function hanle calls the sound
-	createjs.Sound.registerSound('laser.mp3','laser')
+	createjs.Sound.registerSound('laser.mp3','laser');
 	
  	createjs.Ticker.on("tick", hitTest);
 
     stage.addChild(bullet);
+	
 	 
 }
 
@@ -106,29 +105,31 @@ function hitTest(event){
 			//var pt = objA.localToLocal(posX, posY, objB);
 			//pt.x= targets x
 			//pt.y= bullet y
+	"use strict";
+	var pt = bullet.localToLocal(bulletcoordX,400, target); //the bullet is x and the 300 is the y coordianates and then compares the target)
+	console.log(pt.y, pt.y); //PT.X IS THE TARGET & PT.Y = BULLET.Y
+	if (target.hitTest(pt.x, pt.y)){
+		stage.removeChild(bullet);
+		target.alpha = 0.1;
+		score.value++;
+		score.text = score.value;
+		event.remove();
+	}
 	
-			var pt = bullet.localToLocal(bulletcoordX, 300, target);	
-			console.log("position of objB: ", pt.x, pt.y); 			
-			if (target.hitTest(pt.x, pt.y)) { 
-			
-			target.alpha = 0.5;
-			score.value++; 
-			score.text = score.value;
-			event.remove();
-			checkGame();
-			};
-			
-			//testing
-			console.log ('TARGET', target);
-			console.log ('bulletcordX', bulletcoordX);
-			console.log ('bulletcordY', bulletcoordY);
-			console.log ('pt.y', pt.y);
-			console.log ('pt.x', pt.x);
+	if(pt.y<=10){
+		fired = false;
+		target.alpha = 1;
+		stage.removechild(bullet);
+		event.remove();
+	}
+	
+	stage.update(event);
 	
 }
 
 //**************THE KEY MOVEMENT**********//	
 function onKey(e){
+	"use strict";
 		switch(e.keyCode){
 				
 				case 37:  
@@ -142,7 +143,8 @@ function onKey(e){
 				break;
 				
 				case 32:    //spacebar
-				operateGun();
+				if (fired === false) {operateGun()};
+				
 				laserSound();
 				/*score.value++; 
 				score.text = score.value;
@@ -156,12 +158,12 @@ function onKey(e){
 //**************ADD SOUND**********//	
 	
 function laserSound(){
-		
+		"use strict";
 		sound = createjs.Sound.play('laser');
 	}
 
 function winnerSound(){
-		
+		"use strict";
 		sound = createjs.Sound.play('winner');
 	}
 
@@ -169,6 +171,7 @@ function winnerSound(){
 //**************ADD SCORE**********//	
 	
 function addScore(){
+	"use strict";
 		score = new createjs.Text ("0", "20px Arial", "#fff"); //here we create a display with a 0
 		score.x = w - 25;  //this is flexible... it will always be 50 pixels from the top
 		score.y = h - h + 20;
@@ -181,6 +184,7 @@ function addScore(){
 	
 //**************RESET & GAME OVER***********//
 	function checkGame () {
+		"use strict";
 	if ( score.value === 5 ) {
 		createjs.Sound.on("fileload", winnerSound); 
 		createjs.Sound.registerSound('winner.mp3','winner')
@@ -199,4 +203,3 @@ function addScore(){
 		};
 	}
 }
-	
